@@ -14,7 +14,6 @@ public class Kupa implements Observer {
     @Override
     public void update(String location, int temperature){//, int humidity, int pressure) {
         meas.get(location).add(temperature);
-        System.out.println("New measurement from: " + location + ", Temperature: " + temperature);
     }
 
     @Override
@@ -28,5 +27,11 @@ public class Kupa implements Observer {
 
         if (!successful) return;
         meas.put(location, new ArrayList<>());
+    }
+
+    public void displaySubscriptions(){
+        for (String location: meas.keySet()){
+            System.out.println(location);
+        }
     }
 }

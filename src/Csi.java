@@ -3,13 +3,35 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 public class Csi implements Subject{
     private HashMap<String, Sensor> locations;
     private HashMap<String, List<Observer>> observers;
+    private Thread t1;
 
     public Csi(){
         locations = new HashMap<>();
         observers = new HashMap<>();
+
+        Runnable r = () -> {
+            while (true) {
+                for(Map.Entry<String, Sensor> entry: locations.entrySet()){
+                    entry.getValue().measure();
+                    notifyObservers(entry.getKey()); //przez to watek nie wykonmnuje tylko pomiarow ale tez informuje uzytkownikow
+                }
+                System.out.println(Thread.currentThread());
+
+                try{
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        };
+
+        t1 = new Thread(r);
+        t1.start();
     }
 
     public void addNewLocation(String name){//, boolean trackTemperature, boolean trackHumidity, boolean trackPressure){
@@ -17,13 +39,6 @@ public class Csi implements Subject{
 
         locations.put(name, new Sensor());
         observers.put(name, new ArrayList<>());
-    }
-
-    public void newMeasurements(){
-        for(Map.Entry<String, Sensor> entry: locations.entrySet()){
-            entry.getValue().measure();
-            notifyObservers(entry.getKey());
-        }
     }
 
     @Override
