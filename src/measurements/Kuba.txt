@@ -1,0 +1,24 @@
+{
+  "Wroclaw": [
+    {
+      "temperature": 44,
+      "pressure": 1036
+    },
+    {
+      "temperature": -40,
+      "pressure": 975
+    }
+  ],
+  "Legnica": [
+    {
+      "temperature": 5,
+      "humidity": 16,
+      "pressure": 951
+    },
+    {
+      "temperature": -18,
+      "humidity": 52,
+      "pressure": 1038
+    }
+  ]
+}

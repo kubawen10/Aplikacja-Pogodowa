@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Sensor {
+public class WeatherSensor {
     private Integer temperature = null;
     private Integer humidity = null;
     private Integer pressure = null;
@@ -9,13 +9,25 @@ public class Sensor {
     private final boolean measureHumidity;
     private final boolean measurePressure;
 
-    public Sensor(boolean temperature, boolean humidity, boolean pressure) {
+    public WeatherSensor(boolean temperature, boolean humidity, boolean pressure) {
         measureTemperature = temperature;
         measureHumidity = humidity;
         measurePressure = pressure;
     }
 
-    public Sensor() {
+    public boolean isMeasureTemperature() {
+        return measureTemperature;
+    }
+
+    public boolean isMeasureHumidity() {
+        return measureHumidity;
+    }
+
+    public boolean isMeasurePressure() {
+        return measurePressure;
+    }
+
+    public WeatherSensor() {
         measureTemperature = true;
         measureHumidity = true;
         measurePressure = true;
@@ -26,7 +38,6 @@ public class Sensor {
         if (measureTemperature) temperature = random.nextInt(101) - 50; //generate random temperature value between -50 and 50
         if (measureHumidity)    humidity = random.nextInt(101);         //generate random humidity value between 0 and 100
         if (measurePressure)    pressure = random.nextInt(101) + 950;   //generate random pressure value between 950 and 1050
-
     }
 
     public int getTemperature() {
@@ -43,6 +54,5 @@ public class Sensor {
 
     public Measurements getMeasurements(){
         return new Measurements(temperature, humidity, pressure);
-
     }
 }

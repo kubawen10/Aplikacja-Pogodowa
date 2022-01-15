@@ -5,7 +5,7 @@ import java.util.Map;
 
 
 public class Csi implements Subject {
-    private HashMap<String, Sensor> locations;
+    private HashMap<String, WeatherSensor> locations;
     private HashMap<String, List<Observer>> observers;
 
     private Thread t1;
@@ -21,11 +21,23 @@ public class Csi implements Subject {
         t1.start();
     }
 
+    public HashMap<String, String> availableLocationsAndSensors(){
+        HashMap<String, String> data = new HashMap<>();
+        for(Map.Entry<String, WeatherSensor> entry: locations.entrySet()){
+            String sensors ="";
+            if(entry.getValue().isMeasureTemperature()) sensors +="T";
+            if(entry.getValue().isMeasureHumidity()) sensors +="H";
+            if(entry.getValue().isMeasurePressure()) sensors +="P";
+            data.put(entry.getKey(), sensors);
+        }
+        return data;
+    }
+
     public void runInternal() {
         while (shouldContinue) {
             //synchronized bc of possible list changes
             synchronized(synchronizer){
-                for (Map.Entry<String, Sensor> entry : locations.entrySet()) {
+                for (Map.Entry<String, WeatherSensor> entry : locations.entrySet()) {
                     entry.getValue().measure();
                     notifyObservers(entry.getKey());
                 }
@@ -39,7 +51,6 @@ public class Csi implements Subject {
         }
     }
 
-
     public void stopServer(){
         shouldContinue = false;
     }
@@ -52,12 +63,11 @@ public class Csi implements Subject {
         }
     }
 
-
     public void addNewLocation(String name) {
         if (locations.containsKey(name)) return;
 
         synchronized (synchronizer) {
-            locations.put(name, new Sensor());
+            locations.put(name, new WeatherSensor());
             observers.put(name, new ArrayList<>());
         }
     }
@@ -66,7 +76,7 @@ public class Csi implements Subject {
         if (locations.containsKey(name)) return;
 
         synchronized (synchronizer) {
-            locations.put(name, new Sensor(trackTemperature, trackHumidity, trackPressure));
+            locations.put(name, new WeatherSensor(trackTemperature, trackHumidity, trackPressure));
             observers.put(name, new ArrayList<>());
         }
     }
@@ -121,7 +131,5 @@ public class Csi implements Subject {
                 observer.update(location, m);
             }
         }
-
-
     }
 }

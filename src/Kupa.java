@@ -1,14 +1,18 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+
 
 public class Kupa implements Observer {
-    HashMap<String, List<Measurements>> meas;
-    Subject subject;
+    private HashMap<String, List<Measurements>> meas;
+    private Subject subject;
+    private String name;
 
-    public Kupa(Subject subject) {
+    public Kupa(Subject subject, String name) {
         meas = new HashMap<>();
         this.subject = subject;
+        this.name=name;
     }
 
     @Override
@@ -29,101 +33,160 @@ public class Kupa implements Observer {
         meas.put(location, new ArrayList<>());
     }
 
-    public void displaySubscriptions() {
-        for (String location : meas.keySet()) {
-            System.out.println(location);
+    public List<String> subscriptions(){
+        return new ArrayList<>(meas.keySet());
+    }
+
+    public double calculateAvg(List<Integer> list){
+        double sum = 0;
+        for(Integer i: list){
+            sum+=i;
         }
+        return sum/list.size();
     }
 
-    public void averageValues(String location) {
+    public int calculateMin(List<Integer> list){
+        int min = 100000;
+        for(Integer i: list){
+            if (i<min) min = i;
+        }
+        return min;
+    }
+
+    public int calculateMax(List<Integer> list){
+        int max = -100000;
+        for(Integer i: list){
+            if (i>max) max = i;
+        }
+        return max;
+    }
+
+    //average min and max has same code so refactior into functions
+    public HashMap<String, Optional<Double>> averageValues(String location) {
         List<Measurements> m = meas.get(location);
-        int mSize = m.size();
-        double avg;
+        double avgTemperature;
+        double avgHumidity;
+        double avgPressure;
+        HashMap<String, Optional<Double>> data = new HashMap<>();
 
-        if (m.get(0).getTemperature().isPresent()) {
-            avg = 0;
-            for (int i = 0; i < mSize; i++) {
-                avg += m.get(i).getTemperature().get();
-            }
-            System.out.println("Average temperature: " + String.format("%.2f", avg / mSize));
-        } else System.out.println("Average temperature: N/A");
+        List<Integer> temperatureValues = new ArrayList<>();
+        List<Integer> humidityValues = new ArrayList<>();
+        List<Integer> pressureValues = new ArrayList<>();
 
-        if (m.get(0).getHumidity().isPresent()) {
-            avg = 0;
-            for (int i = 0; i < mSize; i++) {
-                avg += m.get(i).getHumidity().get();
+        for(Measurements measurements: m) {
+            if (measurements.getTemperature().isPresent()) {
+                temperatureValues.add(measurements.getTemperature().get());
             }
-            System.out.println("Average humidity: " + String.format("%.2f", avg / mSize));
-        } else System.out.println("Average humidity: N/A");
+            if (measurements.getHumidity().isPresent()) {
+                humidityValues.add(measurements.getHumidity().get());
+            }
+            if (measurements.getPressure().isPresent()) {
+                pressureValues.add(measurements.getPressure().get());
+            }
+        }
+        if(temperatureValues.size()>0) {
+            avgTemperature = calculateAvg(temperatureValues);
+            data.put("Temperature", Optional.of(avgTemperature));
+        }else data.put("Temperature", Optional.empty());
 
-        if (m.get(0).getPressure().isPresent()) {
-            avg = 0;
-            for (int i = 0; i < mSize; i++) {
-                avg += m.get(i).getPressure().get();
-            }
-            System.out.println("Average pressure: " + String.format("%.2f", avg / mSize));
-        } else System.out.println("Average pressure: N/A");
+        if(humidityValues.size()>0) {
+            avgHumidity = calculateAvg(humidityValues);
+            data.put("Humidity", Optional.of(avgHumidity));
+        }else data.put("Humidity", Optional.empty());
+
+        if(pressureValues.size()>0) {
+            avgPressure = calculateAvg(temperatureValues);
+            data.put("Pressure", Optional.of(avgPressure));
+        }else data.put("Pressure", Optional.empty());
+
+        return data;
     }
 
-    public void minValues(String location) {
+    public HashMap<String, Optional<Integer>> minValues(String location) {
         List<Measurements> m = meas.get(location);
-        int mSize = m.size();
-        int min;
+        int minTemperature;
+        int minHumidity;
+        int minPressure;
+        HashMap<String, Optional<Integer>> data = new HashMap<>();
 
-        if (m.get(0).getTemperature().isPresent()) {
-            min = 100;
-            for (int i = 0; i < mSize; i++) {
-                if (m.get(i).getTemperature().get() < min) min = m.get(i).getTemperature().get();
-            }
-            System.out.println("Minimum temperature: " + min);
-        } else System.out.println("Minimum temperature: N/A");
+        List<Integer> temperatureValues = new ArrayList<>();
+        List<Integer> humidityValues = new ArrayList<>();
+        List<Integer> pressureValues = new ArrayList<>();
 
-        if (m.get(0).getHumidity().isPresent()) {
-            min = 101;
-            for (int i = 0; i < mSize; i++) {
-                if (m.get(i).getHumidity().get() < min) min = m.get(i).getHumidity().get();
+        for(Measurements measurements: m) {
+            if (measurements.getTemperature().isPresent()) {
+                temperatureValues.add(measurements.getTemperature().get());
             }
-            System.out.println("Minimum humidity: " + min);
-        } else System.out.println("Minimum humidity: N/A");
+            if (measurements.getHumidity().isPresent()) {
+                humidityValues.add(measurements.getHumidity().get());
+            }
+            if (measurements.getPressure().isPresent()) {
+                pressureValues.add(measurements.getPressure().get());
+            }
+        }
+        if(temperatureValues.size()>0) {
+            minTemperature = calculateMin(temperatureValues);
+            data.put("Temperature", Optional.of(minTemperature));
+        }else data.put("Temperature", Optional.empty());
 
-        if (m.get(0).getPressure().isPresent()) {
-            min = 1100;
-            for (int i = 0; i < mSize; i++) {
-                if (m.get(i).getPressure().get() < min) min = m.get(i).getPressure().get();
-            }
-            System.out.println("Minimum pressure: " + min);
-        } else System.out.println("Minimum pressure: N/A");
+        if(humidityValues.size()>0) {
+            minHumidity = calculateMin(humidityValues);
+            data.put("Humidity", Optional.of(minHumidity));
+        }else data.put("Humidity", Optional.empty());
+
+        if(pressureValues.size()>0) {
+            minPressure = calculateMin(temperatureValues);
+            data.put("Pressure", Optional.of(minPressure));
+        }else data.put("Pressure", Optional.empty());
+
+        return data;
     }
 
-    public void maxValues(String location) {
+    public HashMap<String, Optional<Integer>> maxValues(String location) {
         List<Measurements> m = meas.get(location);
-        int mSize = m.size();
-        int max;
+        int maxTemperature;
+        int maxHumidity;
+        int maxPressure;
+        HashMap<String, Optional<Integer>> data = new HashMap<>();
 
-        if (m.get(0).getTemperature().isPresent()) {
-            max = -100;
-            for (int i = 0; i < mSize; i++) {
-                if (m.get(i).getTemperature().get() > max) max = m.get(i).getTemperature().get();
-            }
-            System.out.println("Maximum temperature: " + max);
-        } else System.out.println("Maximum temperature: N/A");
+        List<Integer> temperatureValues = new ArrayList<>();
+        List<Integer> humidityValues = new ArrayList<>();
+        List<Integer> pressureValues = new ArrayList<>();
 
-        if (m.get(0).getHumidity().isPresent()) {
-            max = -1;
-            for (int i = 0; i < mSize; i++) {
-                if (m.get(i).getHumidity().get() > max) max = m.get(i).getHumidity().get();
+        for(Measurements measurements: m) {
+            if (measurements.getTemperature().isPresent()) {
+                temperatureValues.add(measurements.getTemperature().get());
             }
-            System.out.println("Maximum humidity: " + max);
-        } else System.out.println("Maximum humidity: N/A");
+            if (measurements.getHumidity().isPresent()) {
+                humidityValues.add(measurements.getHumidity().get());
+            }
+            if (measurements.getPressure().isPresent()) {
+                pressureValues.add(measurements.getPressure().get());
+            }
+        }
+        if(temperatureValues.size()>0) {
+            maxTemperature = calculateMax(temperatureValues);
+            data.put("Temperature", Optional.of(maxTemperature));
+        }else data.put("Temperature", Optional.empty());
 
-        if (m.get(0).getPressure().isPresent()) {
-            max = 900;
-            for (int i = 0; i < mSize; i++) {
-                if (m.get(i).getPressure().get() > max) max = m.get(i).getPressure().get();
-            }
-            System.out.println("Maximum pressure: " + max);
-        } else System.out.println("Maximum pressure: N/A");
+        if(humidityValues.size()>0) {
+            maxHumidity = calculateMax(humidityValues);
+            data.put("Humidity", Optional.of(maxHumidity));
+        }else data.put("Humidity", Optional.empty());
+
+        if(pressureValues.size()>0) {
+            maxPressure = calculateMax(temperatureValues);
+            data.put("Pressure", Optional.of(maxPressure));
+        }else data.put("Pressure", Optional.empty());
+
+        return data;
     }
 
+    public String getName(){
+        return name;
+    }
 
+    public HashMap<String, List<Measurements>> getMeas() {
+        return meas;
+    }
 }
