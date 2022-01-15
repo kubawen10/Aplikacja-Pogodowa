@@ -1,3 +1,5 @@
+package com;
+
 import java.util.Random;
 
 public class WeatherSensor {
@@ -5,9 +7,9 @@ public class WeatherSensor {
     private Integer humidity = null;
     private Integer pressure = null;
 
-    private final boolean measureTemperature;
-    private final boolean measureHumidity;
-    private final boolean measurePressure;
+    private boolean measureTemperature;
+    private boolean measureHumidity;
+    private boolean measurePressure;
 
     public WeatherSensor(boolean temperature, boolean humidity, boolean pressure) {
         measureTemperature = temperature;
@@ -25,6 +27,18 @@ public class WeatherSensor {
 
     public boolean isMeasurePressure() {
         return measurePressure;
+    }
+
+    public void setMeasureTemperature(boolean measureTemperature) {
+        this.measureTemperature = measureTemperature;
+    }
+
+    public void setMeasureHumidity(boolean measureHumidity) {
+        this.measureHumidity = measureHumidity;
+    }
+
+    public void setMeasurePressure(boolean measurePressure) {
+        this.measurePressure = measurePressure;
     }
 
     public WeatherSensor() {
@@ -50,6 +64,18 @@ public class WeatherSensor {
 
     public int getPressure() {
         return pressure;
+    }
+
+    public void setTemperature(Integer temperature) {
+        this.temperature = temperature;
+    }
+
+    public void setHumidity(Integer humidity) {
+        this.humidity = humidity;
+    }
+
+    public void setPressure(Integer pressure) {
+        this.pressure = pressure;
     }
 
     public Measurements getMeasurements(){

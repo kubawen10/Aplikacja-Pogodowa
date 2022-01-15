@@ -1,3 +1,5 @@
+package com;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +15,15 @@ public class Kupa implements Observer {
         meas = new HashMap<>();
         this.subject = subject;
         this.name=name;
+    }
+
+    @Override
+    public String toString(){
+        String locations = "";
+        for (String s: meas.keySet()){
+            locations += s + " ";
+        }
+        return "Kupa: " + name + " " + locations;
     }
 
     @Override
