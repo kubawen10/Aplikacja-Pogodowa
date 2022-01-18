@@ -3,6 +3,7 @@ package Menu;
 import com.Csi;
 import com.JsonMaker;
 import com.Kupa;
+import com.google.gson.internal.bind.util.ISO8601Utils;
 
 import java.util.*;
 
@@ -29,6 +30,7 @@ public class MainMenu {
 
             switch (choice) {
                 case 0:
+                    //stop application
                     run = false;
                     try {
                         Thread.sleep(1000);
@@ -40,12 +42,14 @@ public class MainMenu {
                     break;
 
                 case 1:
+                    //add new kupa
                     System.out.println("Name new Kupa: ");
                     String name = scanner.stringChoice();
                     kupas.add(new Kupa(csi, name));
                     break;
 
                 case 2:
+                    //choose kupa
                     Messages.printKupas(kupas);
                     if (kupas.size() == 0) {
                         System.out.println("No kupa to choose from");
@@ -62,6 +66,7 @@ public class MainMenu {
                     break;
 
                 case 3:
+                    //create new sensor location
                     System.out.println("Location: ");
                     String location = scanner.stringChoice();
 
@@ -102,19 +107,29 @@ public class MainMenu {
 
         switch(choice){
             case 1:
-                k.subscribe(chooseLocationToSubscribe());
+                //subscribe chosen kupa to location
+                k.subscribe(chooseLocationFromCsi());
                 break;
 
             case 2:
-                k.unsubscribe(chooseLocationToUnsubscribe(k.subscriptions()));
+                //unsubscribe chosen kupa from location
+                k.unsubscribe(chooseLocationFromSubscribed(k.subscriptions()));
                 break;
 
             case 3:
+                Messages.printSubscriptions(k.subscriptions());
+            case 4:
+                //save measurements of chosen kupa to json file
                 JsonMaker.saveMeasurements(k);
                 break;
 
-            case 4:
-                System.out.println(" to do zrobienia");
+            case 5:
+                //calculation menu
+                if(k.subscriptions().size()==0){
+                    System.out.println("No data to process");
+                    break;
+                }
+                calculationMenu(k);
                 break;
 
             default:
@@ -122,14 +137,56 @@ public class MainMenu {
         }
     }
 
-    private String chooseLocationToSubscribe(){
+    private void calculationMenu(Kupa k){
+        String location = chooseLocationFromSubscribed(k.subscriptions());
+
+        if(!k.getMeas().containsKey(location)){
+            System.out.println("Wrong location");
+            return;
+        }
+        Messages.chooseCalculation();
+        int choice = scanner.intChoice();
+
+
+
+        switch(choice){
+            case 1:
+                HashMap<String, Optional<Double>> avg = k.averageValues(location);
+                for(Map.Entry<String, Optional<Double>> entry: avg.entrySet()){
+                    System.out.println(entry.getKey() + ": " +
+                            (entry.getValue().isPresent() ? String.format("%.2f", entry.getValue().get()) : "N/A"));
+                }
+                break;
+
+            case 2:
+                printIntegerMap(k.minValues(location));
+                break;
+
+            case 3:
+                printIntegerMap(k.maxValues(location));
+                break;
+
+            default:
+                Messages.wrongNumber();
+        }
+    }
+
+    private void printIntegerMap(HashMap<String, Optional<Integer>> map){
+        for(Map.Entry<String, Optional<Integer>> entry: map.entrySet()){
+            System.out.println(entry.getKey() + ": " +
+                    (entry.getValue().isPresent() ? String.format("%d", entry.getValue().get()) : "N/A"));
+        }
+
+    }
+
+    private String chooseLocationFromCsi(){
         Messages.printLocations(csi.availableLocationsAndSensors());
         System.out.println("Location: ");
         String location = scanner.stringChoice();
         return location;
     }
 
-    private String chooseLocationToUnsubscribe(List<String> s){
+    private String chooseLocationFromSubscribed(List<String> s){
         Messages.printSubscriptions(s);
         System.out.println("Location: ");
         String location = scanner.stringChoice();

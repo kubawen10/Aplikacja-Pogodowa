@@ -134,4 +134,8 @@ public class Csi implements Subject {
             }
         }
     }
+
+    public HashMap<String, List<Observer>> getObservers() {
+        return observers;
+    }
 }

@@ -7,9 +7,9 @@ public class WeatherSensor {
     private Integer humidity = null;
     private Integer pressure = null;
 
-    private boolean measureTemperature;
-    private boolean measureHumidity;
-    private boolean measurePressure;
+    private final boolean measureTemperature;
+    private final boolean measureHumidity;
+    private final boolean measurePressure;
 
     public WeatherSensor(boolean temperature, boolean humidity, boolean pressure) {
         measureTemperature = temperature;

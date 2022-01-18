@@ -1,6 +1,7 @@
 package Menu;
 
 import com.Kupa;
+import com.google.gson.stream.JsonToken;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,7 @@ public class Messages {
 
     public static void printSubscriptions(List<String> s){
         for (int i = 0; i < s.size(); i++) {
-            System.out.println((i+1) + ". " + s.get(i));
+            System.out.println(s.get(i));
         }
     }
 
@@ -45,10 +46,16 @@ public class Messages {
     public static void kupaMenu(){
         System.out.println("1. Subscribe to new location");
         System.out.println("2. Unsubscribe location");
-        System.out.println("3. Save measurements");
-        System.out.println("4. Process measurements");
+        System.out.println("3. Check subscriptions");
+        System.out.println("4. Save measurements");
+        System.out.println("5. Process measurements");
     }
 
+    public static void chooseCalculation(){
+        System.out.println("1. Average values");
+        System.out.println("2. Minimal values");
+        System.out.println("3. Maximum values");
+    }
     public static void wrongNumber(){
         System.out.println("Wrong number");
     }

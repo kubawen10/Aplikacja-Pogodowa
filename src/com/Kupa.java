@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public class Kupa implements Observer {
     private HashMap<String, List<Measurements>> meas;
-    private Subject subject;
-    private String name;
+    private final Subject subject;
+    private final String name;
 
     public Kupa(Subject subject, String name) {
         meas = new HashMap<>();
