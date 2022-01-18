@@ -29,8 +29,8 @@ public class Main {
         MainMenu menu = new MainMenu(csi);
         menu.run();
 
-        System.out.println("test git");
+        //System.out.println("test git");
 
-        //com.JsonMaker.saveMeasurements(k1);
+        //JsonMaker.saveMeasurements(k1);
     }
 }

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Messages {
     public static void mainMessage(){
-        System.out.println("\n\n\n\n\n\n\n\n");
+        System.out.println("\n\n\n");
         System.out.println("1. Add Kupa");
         System.out.println("2. Choose Kupa");
         System.out.println("3. Add new sensor location");
@@ -25,6 +25,12 @@ public class Messages {
     public static void printLocations(HashMap<String, String> locations){
         for(Map.Entry<String, String> data: locations.entrySet()){
             System.out.println(data.getKey() + " " + data.getValue());
+        }
+    }
+
+    public static void printSubscriptions(List<String> s){
+        for (int i = 0; i < s.size(); i++) {
+            System.out.println((i+1) + ". " + s.get(i));
         }
     }
 

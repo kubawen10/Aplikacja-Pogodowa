@@ -65,6 +65,11 @@ public class MainMenu {
                     System.out.println("Location: ");
                     String location = scanner.stringChoice();
 
+                    if(csi.availableLocationsAndSensors().containsKey(location)){
+                        System.out.println("This location already exists");
+                        break;
+                    }
+
                     Messages.newSensorMessage();
                     String params = scanner.stringChoice().toLowerCase();
 
@@ -97,11 +102,11 @@ public class MainMenu {
 
         switch(choice){
             case 1:
-                k.subscribe(chooseLocation());
+                k.subscribe(chooseLocationToSubscribe());
                 break;
 
             case 2:
-                k.unsubscribe(chooseLocation());
+                k.unsubscribe(chooseLocationToUnsubscribe(k.subscriptions()));
                 break;
 
             case 3:
@@ -117,12 +122,18 @@ public class MainMenu {
         }
     }
 
-    private String chooseLocation(){
+    private String chooseLocationToSubscribe(){
         Messages.printLocations(csi.availableLocationsAndSensors());
         System.out.println("Location: ");
         String location = scanner.stringChoice();
         return location;
     }
 
+    private String chooseLocationToUnsubscribe(List<String> s){
+        Messages.printSubscriptions(s);
+        System.out.println("Location: ");
+        String location = scanner.stringChoice();
+        return location;
+    }
 
 }

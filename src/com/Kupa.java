@@ -19,11 +19,7 @@ public class Kupa implements Observer {
 
     @Override
     public String toString(){
-        String locations = "";
-        for (String s: meas.keySet()){
-            locations += s + " ";
-        }
-        return "Kupa: " + name + " " + locations;
+        return "Kupa: " + name;
     }
 
     @Override
@@ -72,9 +68,24 @@ public class Kupa implements Observer {
         return max;
     }
 
-    //average min and max has same code so refactior into functions
-    public HashMap<String, Optional<Double>> averageValues(String location) {
+    public void createValueLists(List<Integer> t, List<Integer> h, List<Integer> p, String location){
         List<Measurements> m = meas.get(location);
+
+        for(Measurements measurements: m) {
+            if (measurements.getTemperature().isPresent()) {
+                t.add(measurements.getTemperature().get());
+            }
+            if (measurements.getHumidity().isPresent()) {
+                h.add(measurements.getHumidity().get());
+            }
+            if (measurements.getPressure().isPresent()) {
+                p.add(measurements.getPressure().get());
+            }
+        }
+
+    }
+
+    public HashMap<String, Optional<Double>> averageValues(String location) {
         double avgTemperature;
         double avgHumidity;
         double avgPressure;
@@ -84,17 +95,8 @@ public class Kupa implements Observer {
         List<Integer> humidityValues = new ArrayList<>();
         List<Integer> pressureValues = new ArrayList<>();
 
-        for(Measurements measurements: m) {
-            if (measurements.getTemperature().isPresent()) {
-                temperatureValues.add(measurements.getTemperature().get());
-            }
-            if (measurements.getHumidity().isPresent()) {
-                humidityValues.add(measurements.getHumidity().get());
-            }
-            if (measurements.getPressure().isPresent()) {
-                pressureValues.add(measurements.getPressure().get());
-            }
-        }
+        createValueLists(temperatureValues, humidityValues, pressureValues, location);
+
         if(temperatureValues.size()>0) {
             avgTemperature = calculateAvg(temperatureValues);
             data.put("Temperature", Optional.of(avgTemperature));
@@ -114,7 +116,6 @@ public class Kupa implements Observer {
     }
 
     public HashMap<String, Optional<Integer>> minValues(String location) {
-        List<Measurements> m = meas.get(location);
         int minTemperature;
         int minHumidity;
         int minPressure;
@@ -124,17 +125,8 @@ public class Kupa implements Observer {
         List<Integer> humidityValues = new ArrayList<>();
         List<Integer> pressureValues = new ArrayList<>();
 
-        for(Measurements measurements: m) {
-            if (measurements.getTemperature().isPresent()) {
-                temperatureValues.add(measurements.getTemperature().get());
-            }
-            if (measurements.getHumidity().isPresent()) {
-                humidityValues.add(measurements.getHumidity().get());
-            }
-            if (measurements.getPressure().isPresent()) {
-                pressureValues.add(measurements.getPressure().get());
-            }
-        }
+        createValueLists(temperatureValues, humidityValues, pressureValues, location);
+
         if(temperatureValues.size()>0) {
             minTemperature = calculateMin(temperatureValues);
             data.put("Temperature", Optional.of(minTemperature));
@@ -154,7 +146,6 @@ public class Kupa implements Observer {
     }
 
     public HashMap<String, Optional<Integer>> maxValues(String location) {
-        List<Measurements> m = meas.get(location);
         int maxTemperature;
         int maxHumidity;
         int maxPressure;
@@ -164,17 +155,8 @@ public class Kupa implements Observer {
         List<Integer> humidityValues = new ArrayList<>();
         List<Integer> pressureValues = new ArrayList<>();
 
-        for(Measurements measurements: m) {
-            if (measurements.getTemperature().isPresent()) {
-                temperatureValues.add(measurements.getTemperature().get());
-            }
-            if (measurements.getHumidity().isPresent()) {
-                humidityValues.add(measurements.getHumidity().get());
-            }
-            if (measurements.getPressure().isPresent()) {
-                pressureValues.add(measurements.getPressure().get());
-            }
-        }
+        createValueLists(temperatureValues, humidityValues, pressureValues, location);
+
         if(temperatureValues.size()>0) {
             maxTemperature = calculateMax(temperatureValues);
             data.put("Temperature", Optional.of(maxTemperature));
