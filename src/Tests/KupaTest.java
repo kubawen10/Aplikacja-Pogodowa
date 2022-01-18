@@ -206,7 +206,7 @@ class KupaTest {
         k.update("location", m2);
         k.update("location", m3);
 
-        HashMap<String, Optional<Integer>> max = k.minValues("location");
+        HashMap<String, Optional<Integer>> max = k.maxValues("location");
 
         assertEquals(6, max.get("Temperature").get());
         assertEquals(9, max.get("Humidity").get());

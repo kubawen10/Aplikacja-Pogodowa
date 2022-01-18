@@ -138,7 +138,7 @@ public class Kupa implements Observer {
         }else data.put("Humidity", Optional.empty());
 
         if(pressureValues.size()>0) {
-            minPressure = calculateMin(temperatureValues);
+            minPressure = calculateMin(pressureValues);
             data.put("Pressure", Optional.of(minPressure));
         }else data.put("Pressure", Optional.empty());
 
@@ -168,7 +168,7 @@ public class Kupa implements Observer {
         }else data.put("Humidity", Optional.empty());
 
         if(pressureValues.size()>0) {
-            maxPressure = calculateMax(temperatureValues);
+            maxPressure = calculateMax(pressureValues);
             data.put("Pressure", Optional.of(maxPressure));
         }else data.put("Pressure", Optional.empty());
 
