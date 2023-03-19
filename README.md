@@ -1,4 +1,4 @@
 # Aplikacja-Pogodowa
-Aplikacja wykonana jako projekt na kurs Programowanie Strukturalne i Obiektowe
+The application was created as a project for the Structural and Object-Oriented Programming course.
 
-Pomiary miały być wykonywane w osobnym Thredzie. Wykorzystano wzorzec projektowy Obserwator.
+Measurements were supposed to be performed in a separate thread. The Observer design pattern was used.
